@@ -6,13 +6,14 @@ A modern e-traceability system for Qurban, combining a **Node.js/Express backend
 
 ## 🚀 Key Features
 
-- **Immutable Ledger** — All critical events are recorded permanently on Fabric
-- **Dual-Layer Architecture**
+* **Immutable Ledger** — All critical events are recorded permanently on Fabric
 
-  - **On-Chain:** Hyperledger Fabric for audit & trust
-  - **Off-Chain:** PostgreSQL for fast querying
+* **Dual-Layer Architecture**
 
-- **Role-Based Authorization** with Fabric CA identities
+  * **On-Chain:** Hyperledger Fabric for audit & trust
+  * **Off-Chain:** PostgreSQL for fast querying
+
+* **Role-Based Authorization** with Fabric CA identities
 
 ---
 
@@ -20,12 +21,12 @@ A modern e-traceability system for Qurban, combining a **Node.js/Express backend
 
 Install these before starting:
 
-- **Docker** ≥ `4.42.1`
-- **Docker Compose**
-- **Node.js** `18.20.8`
-- **NPM**
-- **Git**
-- **PostgreSQL 18**
+* **Docker** ≥ `4.42.1`
+* **Docker Compose**
+* **Node.js** `18.20.8`
+* **NPM**
+* **Git**
+* **PostgreSQL 18`**
 
 ---
 
@@ -44,28 +45,38 @@ cd kurban-blockchain/
 
 ---
 
-# 2️⃣ Start Hyperledger Fabric Network
+# 2️⃣ Install Hyperledger Fabric Binaries (Required Before Network Start)
+
+```bash
+cd blockchain
+curl -sSLO https://raw.githubusercontent.com/hyperledger/fabric/main/scripts/install-fabric.sh && chmod +x install-fabric.sh
+./install-fabric.sh docker binary
+```
+
+---
+
+# 3️⃣ Start Hyperledger Fabric Network
 
 Go to test-network:
 
 ```bash
-cd blockchain/test-network
+cd test-network
 ```
 
-### 2.1 Clean & Start Network
+### 3.1 Clean & Start Network
 
 ```bash
 ./network.sh down
 ./network.sh up -ca -s couchdb
 ```
 
-### 2.2 Create Channel
+### 3.2 Create Channel
 
 ```bash
 ./network.sh createChannel -c mychannel
 ```
 
-### 2.3 Deploy Chaincode
+### 3.3 Deploy Chaincode
 
 ```bash
 ./network.sh deployCC \
@@ -76,7 +87,7 @@ cd blockchain/test-network
 
 ---
 
-# 3️⃣ Sync Fabric Certificates (Required for Backend)
+# 4️⃣ Sync Fabric Certificates (Required for Backend)
 
 Still inside `test-network`:
 
@@ -93,9 +104,9 @@ cp -f "./organizations/peerOrganizations/org1.example.com/tlsca/tlsca.org1.examp
 
 ---
 
-# 4️⃣ PostgreSQL 18 Setup (Before Running Backend)
+# 5️⃣ PostgreSQL 18 Setup (Before Running Backend)
 
-## 4.1 Install PostgreSQL 18
+## 5.1 Install PostgreSQL 18
 
 ### macOS
 
@@ -120,7 +131,7 @@ psql --version
 
 ---
 
-## 4.2 Create Database + User
+## 5.2 Create Database + User
 
 ```bash
 sudo -u postgres psql
@@ -137,7 +148,7 @@ GRANT ALL PRIVILEGES ON DATABASE kurban_db TO kurban_user;
 
 ---
 
-## 4.3 Configure `.env` (inside `/server`)
+## 5.3 Configure `.env` (inside `/server`)
 
 ```
 DB_DIALECT=postgres
@@ -150,7 +161,7 @@ DB_PASS=your_password
 
 ---
 
-## 4.4 Run Database Migrations
+## 5.4 Run Database Migrations
 
 Move to backend:
 
@@ -158,7 +169,7 @@ Move to backend:
 cd ../../server
 ```
 
-Install Dependencies
+Install dependencies:
 
 ```bash
 npm install
@@ -172,15 +183,15 @@ npx sequelize db:migrate
 
 ---
 
-# 5️⃣ Run Backend API
+# 6️⃣ Run Backend API
 
-## 5.1 Enroll Fabric Admin
+## 6.1 Enroll Fabric Admin
 
 ```bash
 node scripts/enrollAdmin.js
 ```
 
-## 5.2 Start Server
+## 6.2 Start Server
 
 ```bash
 npm run dev
